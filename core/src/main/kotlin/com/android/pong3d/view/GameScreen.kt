@@ -52,8 +52,8 @@ class GameScreen(private val difficulty: Difficulty) : ScreenAdapter() {
         }
 
         // Posicionamiento cenital de la cámara
-        camera.position.set(0f, 30f, 0f)
-        camera.lookAt(0f, 0f, 0f)
+        camera.position.set(0f, 25f, 15f) // un poco más atrás en Z
+        camera.lookAt(0f, 0f, 0f)         // sigue mirando al centro del campo
         camera.near = 1f
         camera.far = 100f
         camera.update()

@@ -62,8 +62,16 @@ class Ball(model: Model) {
     }
 
     // Reinicia la posición y dirección de la pelota tras anotar un punto
-    fun reset() {
+    fun reset(speed: Float) {
         position.set(0f, 0f, 0f)
-        velocity.set(10f * if (Math.random() > 0.5) 1 else -1, 0f, 5f)
+
+        // Ángulo aleatorio entre -30º y +30º respecto al eje X para hacerlo más entretenido
+        val angleDeg = (-30..30).random().toFloat()
+        val angleRad = Math.toRadians(angleDeg.toDouble()).toFloat()
+
+        val x = speed * kotlin.math.cos(angleRad)
+        val z = speed * kotlin.math.sin(angleRad)
+
+        velocity.set(x * if (Math.random() > 0.5) 1 else -1, 0f, z)
     }
 }

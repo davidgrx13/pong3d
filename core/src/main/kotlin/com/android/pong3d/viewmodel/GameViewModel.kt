@@ -93,10 +93,10 @@ class GameViewModel(private val difficulty: Difficulty) {
         // Si la pelota supera los límites laterales, se reinicia y se suma un punto
         if (ball.position.x > bounds) {
             scoreCpu++
-            ball.reset()
+            ball.reset(difficulty.ballSpeed)
         } else if (ball.position.x < -bounds) {
             scorePlayer++
-            ball.reset()
+            ball.reset(difficulty.ballSpeed)
         }
     }
 }

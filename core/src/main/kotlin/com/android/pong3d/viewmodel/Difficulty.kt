@@ -6,7 +6,7 @@ enum class Difficulty(
     val ballSpeed: Float,         // Velocidad horizontal inicial de la pelota (eje X)
     val cpuSpeedMultiplier: Float // Multiplicador de velocidad para la pala del pc
 ) {
-    EASY(ballSpeed = 8f, cpuSpeedMultiplier = 0.02f),     // Movimiento más lento
-    NORMAL(ballSpeed = 10f, cpuSpeedMultiplier = 0.05f),  // Equilibrado
-    HARD(ballSpeed = 13f, cpuSpeedMultiplier = 0.08f)     // Movimiento rápido
+    EASY(ballSpeed = 8f, cpuSpeedMultiplier = 0.05f),     // Movimiento más lento
+    NORMAL(ballSpeed = 10f, cpuSpeedMultiplier = 0.08f),  // Equilibrado
+    HARD(ballSpeed = 35f, cpuSpeedMultiplier = 0.07f)     // Movimiento rápido
 }
