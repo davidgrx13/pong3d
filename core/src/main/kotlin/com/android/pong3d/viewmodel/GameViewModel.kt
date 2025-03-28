@@ -19,7 +19,10 @@ fun BoundingBox.overlaps(other: BoundingBox): Boolean {
         this.max.z < other.min.z || this.min.z > other.max.z)
 }
 
-class GameViewModel(private val difficulty: Difficulty) {
+class GameViewModel(
+    private val difficulty: Difficulty,
+    private val autoPlay: Boolean = false
+) {
     private val modelBuilder = ModelBuilder()
 
     // Materiales para los modelos 3D
@@ -67,9 +70,13 @@ class GameViewModel(private val difficulty: Difficulty) {
     // Actualiza las entidades del juego y gestiona colisiones
     fun update(delta: Float) {
         ball.update(delta)
-        player.update(delta)
 
-        // La IA del PC sigue la pelota con una velocidad que depende de la dificultad
+        if (autoPlay) {
+            player.followBall(ball, delta * difficulty.cpuSpeedMultiplier)
+        } else {
+            player.update(delta)
+        }
+
         cpu.followBall(ball, delta * difficulty.cpuSpeedMultiplier)
 
         checkCollisions()

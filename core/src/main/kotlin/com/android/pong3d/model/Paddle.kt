@@ -26,9 +26,17 @@ class Paddle(val name: String, val x: Float, private val model: ModelInstance) {
     )
     private val shadowInstance = ModelInstance(shadowModel)
 
-    // Actualiza la pala del jugador según la posición del ratón
+    private var autoPlay = false
+
+    fun enableAutoPlay() {
+        autoPlay = true
+    }
+
+    // Actualiza la pala del jugador según la posición del ratón o en modo IA
     fun update(delta: Float) {
         if (name == "Jugador") {
+            if (autoPlay) return // evita movimiento manual en autoPlay
+
             val mouseY = Gdx.input.y.toFloat()
             val screenHeight = Gdx.graphics.height.toFloat()
 
@@ -45,13 +53,12 @@ class Paddle(val name: String, val x: Float, private val model: ModelInstance) {
         updateBounds()
     }
 
-    // IA del PC: sigue la posición de la pelota en el eje Z
+    // IA del PC (o del jugador si autoPlay = true): sigue la posición de la pelota en el eje Z
     fun followBall(ball: Ball, delta: Float) {
         val speed = 70f
         if (ball.position.z > position.z) position.z += speed * delta
         else if (ball.position.z < position.z) position.z -= speed * delta
 
-        // Aplica los mismos límites del campo
         position.z = position.z.coerceIn(-8f, 8f)
         updateBounds()
     }
