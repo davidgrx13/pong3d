@@ -18,17 +18,16 @@ fun BoundingBox.overlaps(other: BoundingBox): Boolean {
         this.max.z < other.min.z || this.min.z > other.max.z)
 }
 
-class GameViewModel {
+class GameViewModel(private val difficulty: Difficulty) {
     private val modelBuilder = ModelBuilder()
     private val whiteMaterial = Material(ColorAttribute.createDiffuse(Color.WHITE))
     private val redMaterial = Material(ColorAttribute.createDiffuse(Color.RED))
     private val greenMaterial = Material(ColorAttribute.createDiffuse(Color.SKY))
 
-    // Fondo con textura
     private val boardTexture = Texture(Gdx.files.internal("board.png"))
     private val floorMaterial = Material(TextureAttribute.createDiffuse(boardTexture))
     private val floorModel: Model = modelBuilder.createBox(
-        42f, 0.1f, 22f, // tamaño del campo
+        42f, 0.1f, 22f,
         floorMaterial,
         (VertexAttributes.Usage.Position or VertexAttributes.Usage.Normal or VertexAttributes.Usage.TextureCoordinates).toLong()
     )
@@ -47,7 +46,9 @@ class GameViewModel {
         (VertexAttributes.Usage.Position or VertexAttributes.Usage.Normal).toLong()
     )
 
-    val ball = Ball(ballModel)
+    val ball = Ball(ballModel).apply {
+        velocity.set(difficulty.ballSpeed, 0f, 5f)
+    }
     private val player = Paddle("Jugador", x = 15f, model = ModelInstance(playerPaddleModel))
     private val cpu = Paddle("Pc", x = -15f, model = ModelInstance(paddleModel))
 
@@ -58,7 +59,7 @@ class GameViewModel {
     fun update(delta: Float) {
         ball.update(delta)
         player.update(delta)
-        cpu.followBall(ball, delta * 0.05f)
+        cpu.followBall(ball, delta * difficulty.cpuSpeedMultiplier)
         checkCollisions()
     }
 

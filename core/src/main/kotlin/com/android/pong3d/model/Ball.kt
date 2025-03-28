@@ -11,7 +11,7 @@ import com.badlogic.gdx.math.collision.BoundingBox
 
 class Ball(model: Model) {
     val position = Vector3(0f, 0f, 0f)
-    private val velocity = Vector3(10f, 0f, 5f)
+    val velocity = Vector3(10f, 0f, 5f)
     val bounds = BoundingBox(Vector3(), Vector3())
 
     private val modelInstance = ModelInstance(model)

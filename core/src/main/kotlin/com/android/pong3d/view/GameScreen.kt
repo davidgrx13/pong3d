@@ -1,14 +1,13 @@
 package com.android.pong3d.view
 
 import com.android.pong3d.viewmodel.GameViewModel
+import com.android.pong3d.viewmodel.Difficulty
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.ScreenAdapter
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.PerspectiveCamera
-import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.GlyphLayout
-import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.g3d.Environment
 import com.badlogic.gdx.graphics.g3d.ModelBatch
@@ -16,8 +15,8 @@ import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight
 import com.badlogic.gdx.math.Vector3
 
-class GameScreen : ScreenAdapter() {
-    private val viewModel = GameViewModel()
+class GameScreen(private val difficulty: Difficulty) : ScreenAdapter() {
+    private val viewModel = GameViewModel(difficulty)
     private val camera = PerspectiveCamera(67f, Gdx.graphics.width.toFloat(), Gdx.graphics.height.toFloat())
     private val modelBatch = ModelBatch()
 
@@ -27,14 +26,24 @@ class GameScreen : ScreenAdapter() {
 
     private val projectedBallPos = Vector3()
 
-
-
     private val environment = Environment().apply {
         set(ColorAttribute.createAmbientLight(1f, 1f, 1f, 1f))
         add(DirectionalLight().set(1f, 1f, 1f, -1f, -0.8f, -0.2f))
     }
 
     init {
+        val boardWidth = 42f
+        val boardHeight = 22f
+        val aspectRatio = Gdx.graphics.width.toFloat() / Gdx.graphics.height.toFloat()
+
+        if (aspectRatio >= boardWidth / boardHeight) {
+            camera.viewportHeight = boardHeight
+            camera.viewportWidth = boardHeight * aspectRatio
+        } else {
+            camera.viewportWidth = boardWidth
+            camera.viewportHeight = boardWidth / aspectRatio
+        }
+
         camera.position.set(0f, 30f, 0f)
         camera.lookAt(0f, 0f, 0f)
         camera.near = 1f
@@ -50,18 +59,15 @@ class GameScreen : ScreenAdapter() {
         viewModel.render(modelBatch, environment)
         modelBatch.end()
 
-        // Proyectar la posición 3D de la pelota a coordenadas 2D de pantalla
         projectedBallPos.set(viewModel.ball.position)
         camera.project(projectedBallPos)
-
 
         val scoreText = "${viewModel.scoreCpu} : ${viewModel.scorePlayer}"
         layout.setText(font, scoreText)
         val x = (Gdx.graphics.width - layout.width) / 2
-        val y = Gdx.graphics.height - 30f
+        val y = Gdx.graphics.height * 0.75f
 
         batch.begin()
-
         font.draw(batch, layout, x, y)
         batch.end()
     }
@@ -70,6 +76,5 @@ class GameScreen : ScreenAdapter() {
         modelBatch.dispose()
         font.dispose()
         batch.dispose()
-
     }
 }
