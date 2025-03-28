@@ -27,11 +27,7 @@ class GameScreen : ScreenAdapter() {
 
     private val projectedBallPos = Vector3()
 
-    private val glowTexture = Texture(Gdx.files.internal("glow.png"))
-    private val glowSprite = Sprite(glowTexture).apply {
-        setSize(100f, 100f) // Más grande para parecer glow alrededor
-        setAlpha(0.6f)      // Más suave
-    }
+
 
     private val environment = Environment().apply {
         set(ColorAttribute.createAmbientLight(1f, 1f, 1f, 1f))
@@ -58,11 +54,6 @@ class GameScreen : ScreenAdapter() {
         projectedBallPos.set(viewModel.ball.position)
         camera.project(projectedBallPos)
 
-        // Dibujar glow debajo visualmente (ligero desplazamiento hacia abajo)
-        glowSprite.setPosition(
-            projectedBallPos.x - glowSprite.width / 2,
-            projectedBallPos.y - glowSprite.height / 2 - 10f
-        )
 
         val scoreText = "${viewModel.scoreCpu} : ${viewModel.scorePlayer}"
         layout.setText(font, scoreText)
@@ -70,7 +61,7 @@ class GameScreen : ScreenAdapter() {
         val y = Gdx.graphics.height - 30f
 
         batch.begin()
-        glowSprite.draw(batch)
+
         font.draw(batch, layout, x, y)
         batch.end()
     }
@@ -79,6 +70,6 @@ class GameScreen : ScreenAdapter() {
         modelBatch.dispose()
         font.dispose()
         batch.dispose()
-        glowTexture.dispose()
+
     }
 }

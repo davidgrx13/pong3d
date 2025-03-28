@@ -4,15 +4,17 @@ import com.android.pong3d.model.Ball
 import com.android.pong3d.model.Paddle
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.VertexAttributes
 import com.badlogic.gdx.graphics.g3d.*
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute
+import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder
 import com.badlogic.gdx.math.collision.BoundingBox
 
 fun BoundingBox.overlaps(other: BoundingBox): Boolean {
     return !(this.max.x < other.min.x || this.min.x > other.max.x ||
-        this.max.y < other.min.y || this.min.y > other.max.y ||
+        this.max.y < other.min.y || this.max.y > other.max.y ||
         this.max.z < other.min.z || this.min.z > other.max.z)
 }
 
@@ -22,11 +24,13 @@ class GameViewModel {
     private val redMaterial = Material(ColorAttribute.createDiffuse(Color.RED))
     private val greenMaterial = Material(ColorAttribute.createDiffuse(Color.SKY))
 
-    private val floorMaterial = Material(ColorAttribute.createDiffuse(Color(0f, 0f, 0.4f, 1f)))
+    // Fondo con textura
+    private val boardTexture = Texture(Gdx.files.internal("board.png"))
+    private val floorMaterial = Material(TextureAttribute.createDiffuse(boardTexture))
     private val floorModel: Model = modelBuilder.createBox(
-        42f, 0.1f, 22f, // ancho = 40 (X), profundidad = 20 (Z), como el área de juego
+        42f, 0.1f, 22f, // tamaño del campo
         floorMaterial,
-        (VertexAttributes.Usage.Position or VertexAttributes.Usage.Normal).toLong()
+        (VertexAttributes.Usage.Position or VertexAttributes.Usage.Normal or VertexAttributes.Usage.TextureCoordinates).toLong()
     )
     private val floorInstance = ModelInstance(floorModel)
 
