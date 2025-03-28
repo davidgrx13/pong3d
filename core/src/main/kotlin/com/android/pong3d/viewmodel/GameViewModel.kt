@@ -2,13 +2,12 @@ package com.android.pong3d.viewmodel
 
 import com.android.pong3d.model.Ball
 import com.android.pong3d.model.Paddle
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.VertexAttributes
-import com.badlogic.gdx.graphics.g3d.Material
-import com.badlogic.gdx.graphics.g3d.ModelBatch
-import com.badlogic.gdx.graphics.g3d.ModelInstance
+import com.badlogic.gdx.graphics.g3d.*
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.collision.BoundingBox
 
 fun BoundingBox.overlaps(other: BoundingBox): Boolean {
@@ -23,11 +22,28 @@ class GameViewModel {
     private val redMaterial = Material(ColorAttribute.createDiffuse(Color.RED))
     private val greenMaterial = Material(ColorAttribute.createDiffuse(Color.SKY))
 
-    private val ballModel = modelBuilder.createSphere(1f, 1f, 1f, 16, 16, whiteMaterial, (VertexAttributes.Usage.Position or VertexAttributes.Usage.Normal).toLong())
-    private val paddleModel = modelBuilder.createBox(1f, 1f, 6f, redMaterial, (VertexAttributes.Usage.Position or VertexAttributes.Usage.Normal).toLong())
-    private val playerPaddleModel = modelBuilder.createBox(1f, 1f, 6f, greenMaterial, (VertexAttributes.Usage.Position or VertexAttributes.Usage.Normal).toLong())
+    private val floorMaterial = Material(ColorAttribute.createDiffuse(Color(0f, 0f, 0.4f, 1f)))
+    private val floorModel: Model = modelBuilder.createBox(
+        42f, 0.1f, 22f, // ancho = 40 (X), profundidad = 20 (Z), como el área de juego
+        floorMaterial,
+        (VertexAttributes.Usage.Position or VertexAttributes.Usage.Normal).toLong()
+    )
+    private val floorInstance = ModelInstance(floorModel)
 
-    private val ball = Ball(ballModel)
+    private val ballModel = modelBuilder.createSphere(
+        1f, 1f, 1f, 16, 16, whiteMaterial,
+        (VertexAttributes.Usage.Position or VertexAttributes.Usage.Normal).toLong()
+    )
+    private val paddleModel = modelBuilder.createBox(
+        1f, 1f, 6f, redMaterial,
+        (VertexAttributes.Usage.Position or VertexAttributes.Usage.Normal).toLong()
+    )
+    private val playerPaddleModel = modelBuilder.createBox(
+        1f, 1f, 6f, greenMaterial,
+        (VertexAttributes.Usage.Position or VertexAttributes.Usage.Normal).toLong()
+    )
+
+    val ball = Ball(ballModel)
     private val player = Paddle("Jugador", x = 15f, model = ModelInstance(playerPaddleModel))
     private val cpu = Paddle("Pc", x = -15f, model = ModelInstance(paddleModel))
 
@@ -35,20 +51,20 @@ class GameViewModel {
     var scoreCpu = 0
     private val bounds = 20f
 
-
     fun update(delta: Float) {
         ball.update(delta)
         player.update(delta)
-
-        cpu.followBall(ball, delta * 0.05f) // el float es la velocidad de reacción
-
+        cpu.followBall(ball, delta * 0.05f)
         checkCollisions()
     }
 
-    fun render(modelBatch: ModelBatch) {
-        ball.render(modelBatch)
-        player.render(modelBatch)
-        cpu.render(modelBatch)
+    fun render(modelBatch: ModelBatch, environment: Environment) {
+        floorInstance.transform.setToTranslation(0f, -0.55f, 0f)
+        modelBatch.render(floorInstance, environment)
+
+        ball.render(modelBatch, environment)
+        player.render(modelBatch, environment)
+        cpu.render(modelBatch, environment)
     }
 
     private fun checkCollisions() {

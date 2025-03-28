@@ -3,7 +3,6 @@ package com.android.pong3d.lwjgl3;
 import com.android.pong3d.MainGame;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import com.android.pong3d.Main;
 
 /** Launches the desktop (LWJGL3) application. */
 public class Lwjgl3Launcher {

@@ -5,10 +5,16 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.ScreenAdapter
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.PerspectiveCamera
+import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.GlyphLayout
+import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.graphics.g3d.Environment
 import com.badlogic.gdx.graphics.g3d.ModelBatch
+import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute
+import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight
+import com.badlogic.gdx.math.Vector3
 
 class GameScreen : ScreenAdapter() {
     private val viewModel = GameViewModel()
@@ -18,6 +24,19 @@ class GameScreen : ScreenAdapter() {
     private val font = BitmapFont()
     private val batch = SpriteBatch()
     private val layout = GlyphLayout()
+
+    private val projectedBallPos = Vector3()
+
+    private val glowTexture = Texture(Gdx.files.internal("glow.png"))
+    private val glowSprite = Sprite(glowTexture).apply {
+        setSize(100f, 100f) // Más grande para parecer glow alrededor
+        setAlpha(0.6f)      // Más suave
+    }
+
+    private val environment = Environment().apply {
+        set(ColorAttribute.createAmbientLight(1f, 1f, 1f, 1f))
+        add(DirectionalLight().set(1f, 1f, 1f, -1f, -0.8f, -0.2f))
+    }
 
     init {
         camera.position.set(0f, 30f, 0f)
@@ -32,8 +51,18 @@ class GameScreen : ScreenAdapter() {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT or GL20.GL_DEPTH_BUFFER_BIT)
 
         modelBatch.begin(camera)
-        viewModel.render(modelBatch)
+        viewModel.render(modelBatch, environment)
         modelBatch.end()
+
+        // Proyectar la posición 3D de la pelota a coordenadas 2D de pantalla
+        projectedBallPos.set(viewModel.ball.position)
+        camera.project(projectedBallPos)
+
+        // Dibujar glow debajo visualmente (ligero desplazamiento hacia abajo)
+        glowSprite.setPosition(
+            projectedBallPos.x - glowSprite.width / 2,
+            projectedBallPos.y - glowSprite.height / 2 - 10f
+        )
 
         val scoreText = "${viewModel.scoreCpu} : ${viewModel.scorePlayer}"
         layout.setText(font, scoreText)
@@ -41,6 +70,7 @@ class GameScreen : ScreenAdapter() {
         val y = Gdx.graphics.height - 30f
 
         batch.begin()
+        glowSprite.draw(batch)
         font.draw(batch, layout, x, y)
         batch.end()
     }
@@ -49,5 +79,6 @@ class GameScreen : ScreenAdapter() {
         modelBatch.dispose()
         font.dispose()
         batch.dispose()
+        glowTexture.dispose()
     }
 }
