@@ -142,7 +142,6 @@ class DifficultyScreen(private val game: Game) : ScreenAdapter() {
         table.add(normal).size(155f, 28f).padBottom(25f).row()
         table.add(hard).size(120f, 30f)
 
-        BotonDeSonido.agregarBotones(stage, soundOnTexture, soundOffTexture, isMenu = true)
 
     }
 

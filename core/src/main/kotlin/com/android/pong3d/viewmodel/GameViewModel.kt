@@ -108,11 +108,14 @@ class GameViewModel(
 
         if (ball.position.x > bounds) {
             scoreCpu++
+            SoundManager.playPoint() // ⬅ nuevo
             ball.reset(difficulty.ballSpeed)
         } else if (ball.position.x < -bounds) {
             scorePlayer++
+            SoundManager.playPoint() // ⬅ nuevo
             ball.reset(difficulty.ballSpeed)
         }
+
     }
 
 }

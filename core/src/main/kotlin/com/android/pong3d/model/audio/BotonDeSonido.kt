@@ -10,21 +10,31 @@ import com.android.pong3d.audio.SoundManager
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
 
+
 object BotonDeSonido {
+
 
     fun agregarBotones(stage: Stage, soundOn: Texture, soundOff: Texture, isMenu: Boolean) {
         val skin = Skin(Gdx.files.internal("uiskin.json"))
 
-        val labelMusica = Label("Music", skin)
-        labelMusica.setPosition(Gdx.graphics.width - 140f, Gdx.graphics.height - 40f)
-        stage.addActor(labelMusica)
+        if (isMenu) {
+            val centerX = (Gdx.graphics.width - 50f) / 2f
+            val labelMusica = Label("Music", skin)
+            labelMusica.setPosition(centerX, 70f)
+            stage.addActor(labelMusica)
+            crearBotonMusica(stage, soundOn, soundOff, centerX, 20f, isMenu)
+        } else {
+            val labelMusica = Label("Music", skin)
+            labelMusica.setPosition(Gdx.graphics.width - 140f, Gdx.graphics.height - 40f)
+            stage.addActor(labelMusica)
 
-        val labelSonido = Label("Effects", skin)
-        labelSonido.setPosition(Gdx.graphics.width - 70f, Gdx.graphics.height - 40f)
-        stage.addActor(labelSonido)
+            val labelSonido = Label("Effects", skin)
+            labelSonido.setPosition(Gdx.graphics.width - 70f, Gdx.graphics.height - 40f)
+            stage.addActor(labelSonido)
 
-        crearBotonSonido(stage, soundOn, soundOff, Gdx.graphics.width - 70f, Gdx.graphics.height - 100f)
-        crearBotonMusica(stage, soundOn, soundOff, Gdx.graphics.width - 140f, Gdx.graphics.height - 100f, isMenu)
+            crearBotonMusica(stage, soundOn, soundOff, Gdx.graphics.width - 140f, Gdx.graphics.height - 100f, isMenu)
+            crearBotonSonido(stage, soundOn, soundOff, Gdx.graphics.width - 70f, Gdx.graphics.height - 100f)
+        }
     }
 
     fun crearBotonMusica(stage: Stage, soundOn: Texture, soundOff: Texture, x: Float, y: Float, isMenu: Boolean) {

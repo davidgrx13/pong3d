@@ -10,6 +10,7 @@ object SoundManager {
 
     private val clickSound: Sound = Gdx.audio.newSound(Gdx.files.internal("sounds/click.ogg"))
     private val hitSound: Sound = Gdx.audio.newSound(Gdx.files.internal("sounds/golpe_pelota.ogg"))
+    private val pointSound: Sound = Gdx.audio.newSound(Gdx.files.internal("sounds/point.wav"))
 
     private val menuMusic: Music = Gdx.audio.newMusic(Gdx.files.internal("sounds/music_menu_opc1.ogg"))
     private val gameMusic: Music = Gdx.audio.newMusic(Gdx.files.internal("sounds/music_in_game.wav"))
@@ -21,7 +22,9 @@ object SoundManager {
         gameMusic.isLooping = true
         gameMusic.volume = 0.5f
     }
-
+    fun playPoint() {
+        if (!isSoundMuted) pointSound.play()
+    }
     fun playClick() {
         if (!isSoundMuted) clickSound.play()
     }
