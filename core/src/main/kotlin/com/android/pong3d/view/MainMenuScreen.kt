@@ -1,5 +1,7 @@
 package com.android.pong3d.view
 
+import com.android.pong3d.audio.SoundManager
+import com.android.pong3d.model.audio.BotonDeSonido
 import com.android.pong3d.viewmodel.Difficulty
 import com.android.pong3d.viewmodel.GameViewModel
 import com.badlogic.gdx.Game
@@ -23,7 +25,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport
 class MainMenuScreen(private val game: Game) : ScreenAdapter() {
     private val stage = Stage(ScreenViewport())
 
-    private val previewViewModel = GameViewModel(Difficulty.NORMAL, autoPlay = true)
+    private val previewViewModel = GameViewModel(Difficulty.NORMAL, autoPlay = true, enableHitSound = false)
     private val camera = PerspectiveCamera(67f, Gdx.graphics.width.toFloat(), Gdx.graphics.height.toFloat())
     private val modelBatch = ModelBatch()
     private val environment = Environment().apply {
@@ -34,9 +36,13 @@ class MainMenuScreen(private val game: Game) : ScreenAdapter() {
     private val titleTexture = Texture(Gdx.files.internal("title.png"))
     private val playTexture = Texture(Gdx.files.internal("play.png"))
     private val blackOverlay = Texture(Gdx.files.internal("black.png"))
+    private val soundOnTexture = Texture(Gdx.files.internal("sound_on.png"))
+    private val soundOffTexture = Texture(Gdx.files.internal("sound_off.png"))
+
 
     init {
         Gdx.input.inputProcessor = stage
+        SoundManager.playMenuMusic()
 
         camera.position.set(0f, 25f, 15f)
         camera.lookAt(0f, 0f, 0f)
@@ -62,6 +68,8 @@ class MainMenuScreen(private val game: Game) : ScreenAdapter() {
             setSize(220f, 220f)
             addListener(object : ClickListener() {
                 override fun clicked(event: InputEvent?, x: Float, y: Float) {
+                    SoundManager.playClick()
+                    SoundManager.stopMenuMusic()
                     game.screen = DifficultyScreen(game)
                 }
             })
@@ -69,6 +77,10 @@ class MainMenuScreen(private val game: Game) : ScreenAdapter() {
 
         table.add(titleImage).size(250f, 70f).padBottom(40f).row()
         table.add(playButton).size(170f, 60f)
+
+        BotonDeSonido.agregarBotones(stage, soundOnTexture, soundOffTexture, isMenu = true)
+
+
     }
 
     override fun render(delta: Float) {
@@ -98,6 +110,8 @@ class DifficultyScreen(private val game: Game) : ScreenAdapter() {
     private val easyTexture = Texture(Gdx.files.internal("easy.png"))
     private val mediumTexture = Texture(Gdx.files.internal("medium.png"))
     private val hardTexture = Texture(Gdx.files.internal("hard.png"))
+    private val soundOnTexture = Texture(Gdx.files.internal("sound_on.png"))
+    private val soundOffTexture = Texture(Gdx.files.internal("sound_off.png"))
 
     init {
         Gdx.input.inputProcessor = stage
@@ -127,6 +141,9 @@ class DifficultyScreen(private val game: Game) : ScreenAdapter() {
         table.add(easy).size(100f, 30f).padBottom(25f).row()
         table.add(normal).size(155f, 28f).padBottom(25f).row()
         table.add(hard).size(120f, 30f)
+
+        BotonDeSonido.agregarBotones(stage, soundOnTexture, soundOffTexture, isMenu = true)
+
     }
 
     private fun click(action: () -> Unit) = object : ClickListener() {
@@ -149,5 +166,7 @@ class DifficultyScreen(private val game: Game) : ScreenAdapter() {
         easyTexture.dispose()
         mediumTexture.dispose()
         hardTexture.dispose()
+        soundOnTexture.dispose()
+        soundOffTexture.dispose()
     }
 }

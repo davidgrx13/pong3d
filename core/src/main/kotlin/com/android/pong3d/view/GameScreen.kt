@@ -25,6 +25,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.utils.viewport.ScreenViewport
+import com.android.pong3d.audio.SoundManager
+import com.android.pong3d.model.audio.BotonDeSonido
 
 class GameScreen(private val difficulty: Difficulty) : ScreenAdapter() {
     private val viewModel = GameViewModel(difficulty)
@@ -46,13 +48,18 @@ class GameScreen(private val difficulty: Difficulty) : ScreenAdapter() {
     private val pauseIconTexture = Texture(Gdx.files.internal("pauseC.png"))
     private val playTexture = Texture(Gdx.files.internal("play.png"))
     private val exitTexture = Texture(Gdx.files.internal("exit.png"))
+    private val soundOnTexture = Texture(Gdx.files.internal("sound_on.png"))
+    private val soundOffTexture = Texture(Gdx.files.internal("sound_off.png"))
 
     private val pauseOverlay = Group()
 
     init {
+        Gdx.input.inputProcessor = stage
+        SoundManager.playGameMusic()
+
+        val aspectRatio = Gdx.graphics.width.toFloat() / Gdx.graphics.height.toFloat()
         val boardWidth = 42f
         val boardHeight = 22f
-        val aspectRatio = Gdx.graphics.width.toFloat() / Gdx.graphics.height.toFloat()
 
         if (aspectRatio >= boardWidth / boardHeight) {
             camera.viewportHeight = boardHeight
@@ -68,8 +75,6 @@ class GameScreen(private val difficulty: Difficulty) : ScreenAdapter() {
         camera.far = 100f
         camera.update()
 
-        Gdx.input.inputProcessor = stage
-
         val pauseButton = ImageButton(TextureRegionDrawable(TextureRegion(pauseIconTexture)))
         pauseButton.setSize(50f, 50f)
         pauseButton.setPosition(20f, Gdx.graphics.height - 100f)
@@ -78,8 +83,10 @@ class GameScreen(private val difficulty: Difficulty) : ScreenAdapter() {
                 showPauseOverlay()
             }
         })
-
         stage.addActor(pauseButton)
+
+        BotonDeSonido.agregarBotones(stage, soundOnTexture, soundOffTexture, isMenu = false)
+
         setupPauseOverlay()
     }
 
@@ -115,6 +122,7 @@ class GameScreen(private val difficulty: Difficulty) : ScreenAdapter() {
         )
         exitButton.addListener(object : ClickListener() {
             override fun clicked(event: InputEvent?, x: Float, y: Float) {
+                SoundManager.stopGameMusic()
                 (Gdx.app.applicationListener as Game).screen = MainMenuScreen(Gdx.app.applicationListener as Game)
             }
         })
@@ -139,9 +147,7 @@ class GameScreen(private val difficulty: Difficulty) : ScreenAdapter() {
     }
 
     override fun render(delta: Float) {
-        if (!isPaused) {
-            viewModel.update(delta)
-        }
+        if (!isPaused) viewModel.update(delta)
 
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT or GL20.GL_DEPTH_BUFFER_BIT)
 
@@ -174,5 +180,8 @@ class GameScreen(private val difficulty: Difficulty) : ScreenAdapter() {
         pauseIconTexture.dispose()
         playTexture.dispose()
         exitTexture.dispose()
+        soundOnTexture.dispose()
+        soundOffTexture.dispose()
+        SoundManager.stopGameMusic()
     }
 }
