@@ -7,6 +7,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.android.pong3d.audio.SoundManager
+import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
 
@@ -15,20 +17,21 @@ object BotonDeSonido {
 
 
     fun agregarBotones(stage: Stage, soundOn: Texture, soundOff: Texture, isMenu: Boolean) {
-        val skin = Skin(Gdx.files.internal("uiskin.json"))
+        val font = BitmapFont() // fuente por defecto
+        val labelStyle = Label.LabelStyle(font, Color.WHITE)
 
         if (isMenu) {
             val centerX = (Gdx.graphics.width - 50f) / 2f
-            val labelMusica = Label("Music", skin)
+            val labelMusica = Label("Music", labelStyle)
             labelMusica.setPosition(centerX, 70f)
             stage.addActor(labelMusica)
             crearBotonMusica(stage, soundOn, soundOff, centerX, 20f, isMenu)
         } else {
-            val labelMusica = Label("Music", skin)
+            val labelMusica = Label("Music", labelStyle)
             labelMusica.setPosition(Gdx.graphics.width - 140f, Gdx.graphics.height - 40f)
             stage.addActor(labelMusica)
 
-            val labelSonido = Label("Effects", skin)
+            val labelSonido = Label("Effects", labelStyle)
             labelSonido.setPosition(Gdx.graphics.width - 70f, Gdx.graphics.height - 40f)
             stage.addActor(labelSonido)
 
@@ -36,6 +39,8 @@ object BotonDeSonido {
             crearBotonSonido(stage, soundOn, soundOff, Gdx.graphics.width - 70f, Gdx.graphics.height - 100f)
         }
     }
+
+}
 
     fun crearBotonMusica(stage: Stage, soundOn: Texture, soundOff: Texture, x: Float, y: Float, isMenu: Boolean) {
         val button = ImageButton(TextureRegionDrawable(TextureRegion(
@@ -73,4 +78,4 @@ object BotonDeSonido {
         })
         stage.addActor(button)
     }
-}
+
