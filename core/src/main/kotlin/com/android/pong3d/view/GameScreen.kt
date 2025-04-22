@@ -27,12 +27,14 @@ import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.utils.viewport.ScreenViewport
 import com.android.pong3d.audio.SoundManager
 import com.android.pong3d.model.audio.BotonDeSonido
-
+import com.badlogic.gdx.utils.viewport.FitViewport
 class GameScreen(private val difficulty: Difficulty) : ScreenAdapter() {
     private val viewModel = GameViewModel(difficulty)
     private val camera = PerspectiveCamera(67f, Gdx.graphics.width.toFloat(), Gdx.graphics.height.toFloat())
     private val modelBatch = ModelBatch()
-    private val font = BitmapFont()
+    private val font = BitmapFont().apply {
+        data.setScale(3f)
+    }
     private val batch = SpriteBatch()
     private val layout = GlyphLayout()
     private val projectedBallPos = Vector3()
@@ -43,7 +45,7 @@ class GameScreen(private val difficulty: Difficulty) : ScreenAdapter() {
         add(DirectionalLight().set(1f, 1f, 1f, -1f, -0.8f, -0.2f))
     }
 
-    private val stage = Stage(ScreenViewport())
+    private val stage = Stage(FitViewport(800f, 480f))
     private val pauseTexture = Texture(Gdx.files.internal("pause.png"))
     private val pauseIconTexture = Texture(Gdx.files.internal("pauseC.png"))
     private val playTexture = Texture(Gdx.files.internal("play.png"))
@@ -57,10 +59,10 @@ class GameScreen(private val difficulty: Difficulty) : ScreenAdapter() {
         Gdx.input.inputProcessor = stage
         SoundManager.playGameMusic()
 
-        val aspectRatio = Gdx.graphics.width.toFloat() / Gdx.graphics.height.toFloat()
+        val aspectRatio = stage.viewport.worldWidth / stage.viewport.worldHeight
         val boardWidth = 42f
         val boardHeight = 22f
-
+        font.data.setScale(3f)
         if (aspectRatio >= boardWidth / boardHeight) {
             camera.viewportHeight = boardHeight
             camera.viewportWidth = boardHeight * aspectRatio
@@ -77,7 +79,7 @@ class GameScreen(private val difficulty: Difficulty) : ScreenAdapter() {
 
         val pauseButton = ImageButton(TextureRegionDrawable(TextureRegion(pauseIconTexture)))
         pauseButton.setSize(50f, 50f)
-        pauseButton.setPosition(20f, Gdx.graphics.height - 100f)
+        pauseButton.setPosition(20f, stage.viewport.worldHeight - 70f)
         pauseButton.addListener(object : ClickListener() {
             override fun clicked(event: InputEvent?, x: Float, y: Float) {
                 showPauseOverlay()
@@ -91,23 +93,20 @@ class GameScreen(private val difficulty: Difficulty) : ScreenAdapter() {
     }
 
     private fun setupPauseOverlay() {
+        val overlayWidth = stage.viewport.worldWidth
+        val overlayHeight = stage.viewport.worldHeight
+
         val darkOverlay = Image(TextureRegionDrawable(TextureRegion(Texture(Gdx.files.internal("black.png")))))
-        darkOverlay.setSize(Gdx.graphics.width.toFloat(), Gdx.graphics.height.toFloat())
+        darkOverlay.setSize(overlayWidth, overlayHeight)
         darkOverlay.color.a = 0.6f
 
         val pauseImage = Image(TextureRegionDrawable(TextureRegion(pauseTexture)))
-        pauseImage.setSize(250f, 60f)
-        pauseImage.setPosition(
-            (Gdx.graphics.width - pauseImage.width) / 2,
-            (Gdx.graphics.height + 100f) / 2
-        )
+        pauseImage.setSize(overlayWidth * 0.5f, overlayHeight * 0.1f)
+        pauseImage.setPosition((overlayWidth - pauseImage.width) / 2, (overlayHeight + 100f) / 2)
 
         val playButton = ImageButton(TextureRegionDrawable(TextureRegion(playTexture)))
-        playButton.setSize(160f, 160f)
-        playButton.setPosition(
-            (Gdx.graphics.width / 2f) - 180f,
-            (Gdx.graphics.height - 100f) / 2f - 80f
-        )
+        playButton.setSize(120f, 120f)
+        playButton.setPosition((overlayWidth / 2f) - 140f, (overlayHeight - 100f) / 2f - 80f)
         playButton.addListener(object : ClickListener() {
             override fun clicked(event: InputEvent?, x: Float, y: Float) {
                 hidePauseOverlay()
@@ -115,11 +114,8 @@ class GameScreen(private val difficulty: Difficulty) : ScreenAdapter() {
         })
 
         val exitButton = ImageButton(TextureRegionDrawable(TextureRegion(exitTexture)))
-        exitButton.setSize(160f, 160f)
-        exitButton.setPosition(
-            (Gdx.graphics.width / 2f) + 20f,
-            (Gdx.graphics.height - 100f) / 2f - 80f
-        )
+        exitButton.setSize(120f, 120f)
+        exitButton.setPosition((overlayWidth / 2f) + 20f, (overlayHeight - 100f) / 2f - 80f)
         exitButton.addListener(object : ClickListener() {
             override fun clicked(event: InputEvent?, x: Float, y: Float) {
                 SoundManager.stopGameMusic()
@@ -146,11 +142,14 @@ class GameScreen(private val difficulty: Difficulty) : ScreenAdapter() {
         pauseOverlay.isVisible = false
     }
 
+    override fun resize(width: Int, height: Int) {
+        stage.viewport.update(width, height, true)
+    }
+
     override fun render(delta: Float) {
         if (!isPaused) viewModel.update(delta)
 
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT or GL20.GL_DEPTH_BUFFER_BIT)
-
         modelBatch.begin(camera)
         viewModel.render(modelBatch, environment)
         modelBatch.end()

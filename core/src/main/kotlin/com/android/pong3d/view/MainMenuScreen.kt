@@ -20,10 +20,12 @@ import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.ui.*
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
+import com.badlogic.gdx.utils.viewport.FitViewport
 import com.badlogic.gdx.utils.viewport.ScreenViewport
 
+
 class MainMenuScreen(private val game: Game) : ScreenAdapter() {
-    private val stage = Stage(ScreenViewport())
+    private val stage = Stage(FitViewport(800f, 480f))
 
     private val previewViewModel = GameViewModel(Difficulty.NORMAL, autoPlay = true, enableHitSound = false)
     private val camera = PerspectiveCamera(67f, Gdx.graphics.width.toFloat(), Gdx.graphics.height.toFloat())
@@ -83,6 +85,10 @@ class MainMenuScreen(private val game: Game) : ScreenAdapter() {
 
     }
 
+    override fun resize(width: Int, height: Int) {
+        stage.viewport.update(width, height, true)
+    }
+
     override fun render(delta: Float) {
         previewViewModel.update(delta)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT or GL20.GL_DEPTH_BUFFER_BIT)
@@ -104,7 +110,7 @@ class MainMenuScreen(private val game: Game) : ScreenAdapter() {
 }
 
 class DifficultyScreen(private val game: Game) : ScreenAdapter() {
-    private val stage = Stage(ScreenViewport())
+    private val stage = Stage(FitViewport(800f, 480f))
 
     private val titleTexture = Texture(Gdx.files.internal("title.png"))
     private val easyTexture = Texture(Gdx.files.internal("easy.png"))
@@ -143,6 +149,9 @@ class DifficultyScreen(private val game: Game) : ScreenAdapter() {
         table.add(hard).size(120f, 30f)
 
 
+    }
+    override fun resize(width: Int, height: Int) {
+        stage.viewport.update(width, height, true)
     }
 
     private fun click(action: () -> Unit) = object : ClickListener() {
