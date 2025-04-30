@@ -147,9 +147,18 @@ Esta separación permite mantener el código modular, reutilizable y más fácil
 
 ![Sonido_OFF](./capturas/sonido_off.jpg)
 
+---
+
+
+## 🎥 Video de Funcionamiento
+
+[![Ver video en YouTube](https://img.youtube.com/vi/abcd1234efg/0.jpg)](https://youtu.be/fVF8NoNVlyA)
 
 ---
 
-## 🎥 Video
+## 🙌 Autores
 
----
+- **David** **Garcia**
+- **Francisco** **Sacroisky** 
+ 
+  📧 [francisco@email.com] – *(opcional)*
