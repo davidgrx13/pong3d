@@ -152,7 +152,7 @@ Esta separación permite mantener el código modular, reutilizable y más fácil
 
 ## 🎥 Video de Funcionamiento
 
-[![Ver video en YouTube]](https://youtu.be/fVF8NoNVlyA)
+[[Ver video en YouTube]](https://youtu.be/fVF8NoNVlyA)
 
 ---
 
