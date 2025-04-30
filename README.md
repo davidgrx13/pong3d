@@ -131,13 +131,23 @@ Esta separación permite mantener el código modular, reutilizable y más fácil
 
 ## 📸 Capturas de Pantalla
 
+### Menu principal:     
+
 ![Menu](./capturas/menu.jpg)
+
+### Dificultad: 
 
 ![Dificultad](./capturas/dificultad.jpg)
 
+### Pausa:
+
 ![Pausa](./capturas/pausa.jpg)
 
+### Sonido off:
+
 ![Sonido_OFF](./capturas/sonido_off.jpg)
+
+
 ---
 
 ## 🎥 Video
