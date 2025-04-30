@@ -121,24 +121,7 @@ Esta separación permite mantener el código modular, reutilizable y más fácil
 
 ## 🧱 Estructura del Proyecto
 
-📁 **Pong3D/**
-├── 📂 **android/**                  → Plataforma Android (Launcher)
-│   └── 📄 AndroidLauncher.kt
-│
-├── 📂 **core/**                     → Lógica principal del juego
-│   ├── 📂 assets/               → Archivos multimedia
-│   │   ├── 🎵 sounds/           → Efectos de sonido y música
-│   │   └── 🖼️ *.png             → Texturas y botones
-│   └── 📂 src/
-│       └── 📂 com.android.pong3d/
-│           ├── 📁 **model/**        → Lógica de objetos (Ball, Paddle, etc.)
-│           ├── 📁 **view/**         → Pantallas del juego (UI)
-│           └── 📁 **viewmodel/**    → Lógica del juego y reglas (GameViewModel)
-│
-├── 📂 **lwjgl3/**                   → Plataforma escritorio (PC)
-│   └── 📄 Lwjgl3Launcher.kt
-├── 📝 **README.md**                → Documento del proyecto
-└── ⚙️ build.gradle             → Configuración de compilación
+![Estructura](./capturas/estructura.png)
 
 
 ---
