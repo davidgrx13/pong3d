@@ -30,6 +30,7 @@ El juego incluye:
 ---
 
 ## 🚀 Instalación y Ejecución
+
 ✅ Requisitos
 
 - Android Studio instalado (versión reciente)
@@ -44,6 +45,7 @@ El juego incluye:
 ---
 
 ## 🕹️ Mecánicas del Juego
+
 - Control táctil o con ratón (según plataforma).
 
 - IA adaptable según dificultad elegida.
@@ -84,6 +86,7 @@ Esta separación permite mantener el código modular, reutilizable y más fácil
 
 ## 🚀 Instrucciones de Instalación y Ejecución
 
+
 ### ✅ Requisitos
 
 - Android Studio (última versión)
@@ -99,6 +102,7 @@ Esta separación permite mantener el código modular, reutilizable y más fácil
    git clone https://github.com/usuario/pong3d.git  ```
 
 --- 
+
 ## ▶️ Funcionalidades
 
 ✅ Selección de dificultad (Fácil, Normal, Difícil)
@@ -123,11 +127,17 @@ Esta separación permite mantener el código modular, reutilizable y más fácil
 
 ![Estructura](./capturas/estructura.png)
 
-
 ---
 
 ## 📸 Capturas de Pantalla
 
+![Menu](./capturas/menu.jpg)
+
+![Dificultad](./capturas/dificultad.jpg)
+
+![Pausa](./capturas/pausa.jpg)
+
+![Sonido_OFF](./capturas/sonido_off.jpg)
 ---
 
 ## 🎥 Video
